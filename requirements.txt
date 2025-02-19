@@ -45,11 +45,11 @@ Markdown==3.7
 markdown-it-py==3.0.0
 MarkupSafe==3.0.2
 mdurl==0.1.2
-ml-dtypes==0.4.1
+
 mpmath==1.3.0
 namex==0.0.8
 networkx==3.4.2
-numpy==2.0.2
+
 opt_einsum==3.4.0
 optree==0.13.1
 packaging==24.2
@@ -74,7 +74,7 @@ sqlparse==0.5.3
 sympy==1.13.1
 tensorboard==2.18.0
 tensorboard-data-server==0.7.2
-tensorflow_intel==2.18.0
+
 termcolor==2.5.0
 tokenizers==0.21.0
 tqdm==4.67.1

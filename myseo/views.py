@@ -330,7 +330,8 @@ class WebsiteViewSet(viewsets.ModelViewSet):
 
 
         try:
-            lighthouse_path = 'C:/Users/Xuhoor sharpolian/AppData/Roaming/npm/lighthouse.cmd'
+            node_path = r"C:\node-v20.18.3-win-x64\node.exe"
+            lighthouse_path = r"C:\node-v20.18.3-win-x64\lighthouse.cmd"
             
             # Use a minimal Puppeteer script that waits for the page to load but not too long
             puppeteer_script = '''
