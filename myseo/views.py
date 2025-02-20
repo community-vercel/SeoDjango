@@ -189,6 +189,8 @@ def password_reset_request(request):
                 [email],
                 fail_silently=False,
             )
+
+
             
             return JsonResponse({'message': 'Password reset link sent to your email.'})
 
