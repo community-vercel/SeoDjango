@@ -203,7 +203,6 @@ def password_reset_request(request):
 
         return JsonResponse({'error': 'Email not registered.'}, status=400)
 
-
 @method_decorator(csrf_exempt, name='dispatch')
 class API_PasswordResetConfirmView(PasswordResetConfirmView):
 
