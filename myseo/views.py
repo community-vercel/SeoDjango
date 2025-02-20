@@ -179,7 +179,7 @@ def password_reset_request(request):
         if user:
             token = default_token_generator.make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
-            reset_url = f"ortal.sharplogicians.com/reset/{uid}/{token}"
+            reset_url = f"portal.sharplogicians.com/reset/{uid}/{token}"
 
 
             send_mail(
@@ -191,7 +191,7 @@ def password_reset_request(request):
             )
 
 
-            
+
             return JsonResponse({'message': 'Password reset link sent to your email.'})
 
         return JsonResponse({'error': 'Email not registered.'}, status=400)
