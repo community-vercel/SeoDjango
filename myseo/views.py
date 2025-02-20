@@ -205,7 +205,6 @@ def password_reset_request(request):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class API_PasswordResetConfirmView(PasswordResetConfirmView):
-
     def post(self, request, uidb64, token, *args, **kwargs):
         # Use the built-in form to validate uid/token and set the new password.
         form = self.get_form()
