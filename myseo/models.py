@@ -5,7 +5,7 @@ from django.utils.timezone import now, timedelta
 
 class Website(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    url = models.URLField(unique=True)
+    url = models.URLField(unique=False)
     verified = models.BooleanField(default=False)
     verification_file = models.ImageField(upload_to='verification_files/', null=True, blank=True)
     verification_meta = models.CharField(max_length=820)

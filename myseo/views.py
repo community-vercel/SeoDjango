@@ -14,7 +14,15 @@ from rest_framework.response import Response
 from rest_framework import permissions, status
 from .models import Website
 from .serializers import WebsiteSerializer
+from django.contrib.auth.views import PasswordResetConfirmView
+from django.http import JsonResponse
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 import os
+from django.core.mail import send_mail
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
 import requests
 from django.http import JsonResponse
 from django.utils import timezone
@@ -36,7 +44,8 @@ import re
 from collections import deque
 from requests.exceptions import RequestException
 from django.utils.timezone import now
- 
+from django.contrib.auth.views import PasswordResetConfirmView
+
 import requests
 from bs4 import BeautifulSoup
 from rest_framework import viewsets, status
@@ -58,9 +67,14 @@ def add_website(request):
     if request.method == 'POST':
         url = request.data.get('url')
         verification_method = request.data.get('verification_method')
-        verification_meta = request.data.get('verification_token','')
-        # Handle file upload
+        verification_meta = request.data.get('verification_token', '')
         verification_file = request.FILES.get('verification_file')
+
+        # Check if the website already exists for the user
+        if Website.objects.filter(user=request.user, url=url).exists():
+            return Response({'detail': 'This website has already been added.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Create the website based on verification method
         if verification_method == 'file' and verification_file:
             website = Website.objects.create(
                 user=request.user,
@@ -76,9 +90,8 @@ def add_website(request):
                 verification_meta=verification_meta,
             )
 
-        return Response(WebsiteSerializer(website).data, status=status.HTTP_201_CREATED)
-    return Response({'detail': 'Invalid verification method'}, status=status.HTTP_400_BAD_REQUEST)
-
+        return Response(WebsiteSerializer(website).data, status=status.HTTP_201_CREATED)    
+    return Response({'detail': 'Invalid request method.'}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -155,8 +168,44 @@ def login(request):
         token, created = Token.objects.get_or_create(user=user)
         return Response({'token': token.key}, status=status.HTTP_200_OK)
     return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
+@csrf_exempt
+@api_view(['POST'])
+def password_reset_request(request):
+    if request.method == 'POST':
+        email = request.data.get('email')
+       
+        user = User.objects.filter(email=email).first()
+     
+        if user:
+            token = default_token_generator.make_token(user)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            reset_url = f"ortal.sharplogicians.com/reset/{uid}/{token}"
+
+            send_mail(
+                'Password Reset Request',
+                f'Click the link below to reset your password:\n{reset_url}',
+                'your_email@gmail.com',
+                [email],
+                fail_silently=False,
+            )
+            return JsonResponse({'message': 'Password reset link sent to your email.'})
+
+        return JsonResponse({'error': 'Email not registered.'}, status=400)
 
 
+@method_decorator(csrf_exempt, name='dispatch')
+class API_PasswordResetConfirmView(PasswordResetConfirmView):
+
+   
+    def post(self, request, uidb64, token, *args, **kwargs):
+        # Use the built-in form to validate uid/token and set the new password.
+        form = self.get_form()
+        print(form)
+        if form.is_valid():
+            self.user = form.save()
+            return JsonResponse({'message': 'Password has been reset successfully.'})
+        else:
+            return JsonResponse(form.errors, status=400)
 class ProfessionalWebCrawlAPIView(APIView):
     """
     API to perform web crawling on a specific website with a daily crawl limit.

@@ -1,6 +1,6 @@
 from django.urls import path, include  # instead of 'url' from django.conf.urls
 from .import views
-from .views import ProfessionalWebCrawlAPIView, WebsiteViewSet,WebsiteViewSets,CrawlHistoryAPIView
+from .views import ProfessionalWebCrawlAPIView,API_PasswordResetConfirmView, WebsiteViewSet,WebsiteViewSets,CrawlHistoryAPIView
 
 urlpatterns = [
     # path('websites/<int:pk>/verify/', verify_website, name='website-verify'),
@@ -16,7 +16,8 @@ urlpatterns = [
     path('audit-websites/<int:pk>/audit/', WebsiteViewSets.as_view({'get': 'seo_audit'}), name='seo_audit'),
     path('crawl-history/<int:website_id>/', views.get_history, name='crawl-history'),
     path('seo-dashwebsites/<int:website_id>/', views.get_latest_lighthouse_reports, name='delete_website'),
-
+    path('password-reset/',views.password_reset_request, name='password_reset'),
+    path('password-reset-confirm/<uidb64>/<token>/', API_PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('api-auth/', include('rest_framework.urls')),
     path('rest-auth/', include('dj_rest_auth.urls')),  # Ensure this is dj_rest_auth
     path('rest-auth/registration/', include('dj_rest_auth.registration.urls')),
