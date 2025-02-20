@@ -200,6 +200,7 @@ def password_reset_request(request):
 
 
 
+
             return JsonResponse({'message': 'Password reset link sent to your email.'})
 
         return JsonResponse({'error': 'Email not registered.'}, status=400)
