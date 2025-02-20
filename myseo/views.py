@@ -181,6 +181,7 @@ def password_reset_request(request):
             uid = urlsafe_base64_encode(force_bytes(user.pk))
             reset_url = f"ortal.sharplogicians.com/reset/{uid}/{token}"
 
+
             send_mail(
                 'Password Reset Request',
                 f'Click the link below to reset your password:\n{reset_url}',
