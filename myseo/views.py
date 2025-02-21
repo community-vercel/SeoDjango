@@ -385,7 +385,6 @@ class WebsiteViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Invalid form_factor. Use "mobile" or "desktop".'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-
         try:
             node_path = r"C:\node-v20.18.3-win-x64\node.exe"
             lighthouse_path = r"C:\node-v20.18.3-win-x64\lighthouse.cmd"
