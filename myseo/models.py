@@ -29,7 +29,7 @@ class CrawlHistory(models.Model):
 
 class Page(models.Model):
     website = models.ForeignKey('Website', on_delete=models.CASCADE, related_name='pages')
-    url = models.URLField(unique=True)
+    url = models.URLField(unique=False)
     status = models.CharField(max_length=50)
     title = models.CharField(max_length=3476, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
