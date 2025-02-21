@@ -424,7 +424,7 @@ class WebsiteViewSet(viewsets.ModelViewSet):
             # Run Lighthouse with minimal options to speed up the analysis
             result = subprocess.run(
                 [
-                    lighthouse_path,
+                    "lighthouse",,
                     url,
                     '--output=json',
                     '--quiet',
